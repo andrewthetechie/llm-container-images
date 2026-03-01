@@ -25,35 +25,11 @@ env:
   OWNER: ${{ github.repository_owner }}
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      images: ${{ steps.changes.outputs.images }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Detect changed images
-        id: changes
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo 'images=["${{ inputs.image }}"]' >> $GITHUB_OUTPUT
-          else
-            # Find which image directories changed
-            CHANGED=$(git diff --name-only HEAD~1 HEAD -- images/ | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n") | map(select(. != ""))')
-            if [ "$CHANGED" = "[]" ] || [ -z "$CHANGED" ]; then
-              echo 'images=[]' >> $GITHUB_OUTPUT
-            else
-              echo "images=$CHANGED" >> $GITHUB_OUTPUT
-            fi
-          fi
-
   build:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.images != '[]'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ${{ fromJson(needs.detect-changes.outputs.images) }}
+        image: [openclaw]
     permissions:
       contents: read
       packages: write
