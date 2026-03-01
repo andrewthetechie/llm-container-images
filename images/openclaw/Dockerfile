@@ -33,16 +33,13 @@ RUN apt-get update && apt-get install -y \
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Create non-root user
-RUN useradd -m -u 1000 -s /bin/bash openclaw
-
 COPY --from=base /build /app
 WORKDIR /app
 
 # Set ownership
 RUN chown -R openclaw:openclaw /app
 
-USER openclaw
+USER 1000
 
 # Default config and workspace directories
 ENV HOME=/home/openclaw
