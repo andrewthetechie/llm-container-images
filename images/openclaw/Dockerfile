@@ -37,7 +37,7 @@ COPY --from=base /build /app
 WORKDIR /app
 
 # Set ownership
-RUN chown -R openclaw:openclaw /app
+RUN chown -R 1000:1000 /app
 
 USER 1000
 
