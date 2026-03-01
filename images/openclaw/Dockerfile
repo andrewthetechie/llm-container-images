@@ -37,13 +37,13 @@ COPY --from=base /build /app
 WORKDIR /app
 
 # Set ownership
-RUN chown -R 1000:1000 /app
-
+RUN chown -R 1000:1000 /app && \
+    mkdir -p /home/openclaw/.openclaw/workspace && \
+    chown -R 1000:1000 /home/openclaw
 USER 1000
 
 # Default config and workspace directories
 ENV HOME=/home/openclaw
-RUN mkdir -p /home/openclaw/.openclaw/workspace
 
 EXPOSE 18789
 
